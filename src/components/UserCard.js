@@ -4,6 +4,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import profilePhoto from "../assets/svgs/profilePhoto.png";
 import SimpleBackdrop from "./ui/Backdrop";
+import { Link } from "react-router-dom";
 
 const UserCard = () => {
   const [data, setData] = useState([]);
@@ -67,6 +68,11 @@ const UserCard = () => {
               <h1 className="pl-5">{data.district}</h1>
             </div>
           </div>
+          <Link to={`/edit/${id}`}>
+            <button className="p-2 w-full bg-primary text-white font-semibold rounded-md">
+              Edit Details
+            </button>
+          </Link>
         </div>
       </div>
     </div>

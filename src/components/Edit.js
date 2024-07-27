@@ -6,11 +6,16 @@ import axios from "axios";
 import CustomDropdown from "./CustomDropDown.js";
 import { toast, ToastContainer } from "react-toastify";
 import { useParams } from "react-router";
+import { useNavigate } from "react-router";
+import SimpleBackdrop from "./ui/Backdrop.js";
 
 const AddNew = () => {
   const { id } = useParams();
   const [countries, setCountries] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [edited, setEdited] = useState(false);
+  const Navigate = useNavigate();
   const [initialValues, setInitialValues] = useState({
     name: "",
     avatar: null,
@@ -34,6 +39,7 @@ const AddNew = () => {
 
   //   https://669b3f09276e45187d34eb4e.mockapi.io/api/v1/employee/:id
   useEffect(() => {
+    setIsLoading(true);
     axios
       .get(`${process.env.REACT_APP_GET_EMPLOYEE_ID_URL}/${id}`)
       .then((response) => {
@@ -47,6 +53,7 @@ const AddNew = () => {
           state: userData.state,
           district: userData.district,
         });
+        setIsLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching countries:", error);
@@ -90,7 +97,7 @@ const AddNew = () => {
           },
         }
       );
-      toast.success("Employee added successfully");
+
       setInitialValues({
         name: "",
         emailId: "",
@@ -101,6 +108,9 @@ const AddNew = () => {
       });
       setCountries(null);
       resetForm();
+      setEdited(true);
+      //   Navigate(`/${id}`);
+      toast.success("Employee added successfully");
     } catch (error) {
       toast.error("Error in adding employee");
       console.error("Error:", error.msg);
@@ -110,8 +120,9 @@ const AddNew = () => {
   return (
     <div className="container mx-auto mt-[5rem] sm:max-w-[60%] p-4">
       <ToastContainer />
-      <h1 className="text-2xl font-bold underline mb-4">
-        Edit Empolyee Details
+      {isLoading && <SimpleBackdrop />}
+      <h1 className="text-2xl font-bold  mb-4">
+        Edit Details {`for ${initialValues.name}`}
       </h1>
       <Formik
         enableReinitialize={true}
@@ -210,12 +221,24 @@ const AddNew = () => {
             <div className="sm:col-span-2">
               <button
                 type="submit"
-                className="w-full p-2 bg-blue-500 text-white rounded"
+                className="w-full p-2 bg-blue-500 text-white rounded font-semibold"
                 disabled={isSubmitting}
               >
                 Submit
               </button>
             </div>
+            {edited && (
+              <div className="sm:col-span-2 ">
+                <button
+                  onClick={() => {
+                    Navigate(`/${id}`);
+                  }}
+                  className="w-full text-white font-semibold p-2 rounded bg-green-500"
+                >
+                  Go to Details Page
+                </button>
+              </div>
+            )}
           </Form>
         )}
       </Formik>
