@@ -4,7 +4,6 @@ import NavBar from "./components/NavBar";
 import AddNew from "./components/AddNew";
 import Edit from "./components/Edit";
 import UserCard from "./components/UserCard";
-import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
